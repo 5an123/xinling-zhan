@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心灵港湾 · 首页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #fffaf0;
+            font-family: 'Segoe UI', 'Comic Neue', cursive;
+            padding-bottom: 40px;
+        }
+        /* 顶部导航 */
+        .top-bar {
+            background: #fff9f2;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 3px solid #ffddb0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #e7a87a;
+        }
+        .user-area {
+            background: #ffe6d0;
+            border-radius: 40px;
+            padding: 6px 18px;
+            font-weight: bold;
+            color: #b45f3b;
+        }
+        .logout-btn {
+            background: #ffcf9a;
+            border: none;
+            margin-left: 15px;
+            padding: 6px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .hero {
+            background: #fff4e6;
+            border-radius: 60px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+       
+.banner-place {
+  width: 100%;
+  height: 260px; /* 加高容器，给娃娃留足空间 */
+  border-radius: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: transparent;
+}
+
+.banner-place img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 完整显示，等比例缩放，不裁剪 */
+  background-color: #fff4e6; /* 给空白区域补和页面一致的背景色，更美观 */
+}
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        .card {
+            background: #fffef9;
+            border-radius: 48px;
+            width: 260px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 12px 22px rgba(0,0,0,0.06);
+            border: 1px solid #ffebd2;
+        }
+        .card:hover { transform: translateY(-8px); background: #fffcf0; }
+        .card-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+        .card h3 { color: #d49364; margin: 15px 0 8px; }
+        .card p { color: #b68664; font-size: 0.9rem; }
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #cfab8b;
+        }
+    </style>
+</head>
+<body>
+<div class="top-bar">
+    <div class="logo">🌱 心灵港湾</div>
+    <div><span class="user-area" id="welcomeUser"></span>
+    <button class="logout-btn" id="logoutBtn">🍃 退出登录</button></div>
+</div>
+<div class="container">
+    <div class="hero">
+        <div class="banner-place"><img src="../素材/banner.png"alt="心灵港湾 banner"></div>
+        <h2>✨ 今天也要好好爱自己 ✨</h2>
+        <p>点击下方卡片，开启专属治愈时刻</p>
+    </div>
+    <div class="cards">
+        <div class="card" onclick="location.href='chat.html'">
+            <div class="card-icon">💬</div>
+            <h3>暖心对话</h3>
+            <p>AI安慰陪伴，倾诉烦恼</p>
+        </div>
+        <div class="card" onclick="location.href='test.html'">
+            <div class="card-icon">📊</div>
+            <h3>心理测试</h3>
+            <p>10道题读懂你的情绪</p>
+        </div>
+        <div class="card" onclick="location.href='game.html'">
+            <div class="card-icon">🎈</div>
+            <h3>解压小游戏</h3>
+            <p>抓云朵 · 治愈放松</p>
+        </div>
+    </div>
+</div>
+<footer>❤️ 你的情绪小树洞，每一刻都被温柔接住</footer>
+<script>
+    // 检查登录态
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+        window.location.href = 'login.html';
+    }
+    const currentUser = localStorage.getItem('currentUser') || '小可爱';
+    document.getElementById('welcomeUser').innerText = `👋 ${currentUser}`;
+    // 退出登录
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('currentUser');
+        // 注意：保留rememberedUser不清除可让下次自动填充
+        window.location.href = 'login.html';
+    });
+</script>
+</body>
+</html>

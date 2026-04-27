@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心灵港湾 · 暖心对话</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #fff5ec;
+            font-family: 'Segoe UI', 'Comic Neue', cursive;
+            padding: 20px;
+        }
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fffef7;
+            border-radius: 48px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+        .chat-header {
+            background: #ffe3cd;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: #b6643a;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .bubble {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 28px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .user-bubble {
+            background: #ffefdf;
+            align-self: flex-end;
+            color: #7b563c;
+            border-bottom-right-radius: 8px;
+        }
+        .ai-bubble {
+            background: #fff0e0;
+            align-self: flex-start;
+            border-bottom-left-radius: 8px;
+            color: #9b6e4c;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+        .input-area {
+            padding: 20px;
+            background: #fffaf2;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid #ffe3cf;
+        }
+        .input-area input {
+            flex: 1;
+            border-radius: 60px;
+            border: 2px solid #ffe0bf;
+            padding: 12px 20px;
+            font-family: inherit;
+        }
+        .input-area button {
+            background: #ffd2a5;
+            border: none;
+            border-radius: 60px;
+            padding: 0 25px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .back-home {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            background: #fce3c9;
+            padding: 8px 25px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #b45f3b;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="chat-header">🐻 树洞精灵 · 随时倾听</div>
+    <div class="chat-messages" id="messagesArea">
+        <div class="bubble ai-bubble">嗨～我是你的治愈助手，今天有什么想和我聊聊吗？ 🌼</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="输入你的心情..." autocomplete="off">
+        <button id="sendBtn">发送</button>
+    </div>
+</div>
+<a href="index.html" class="back-home">🍃 返回首页</a>
+<script>
+    // 检查登录态
+    if (localStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
+
+    // 【此处放豆包文案】安慰话语库（可随意扩充）
+    const comfortMessages = [
+        "🌸 你已经很棒了，允许自己休息一下。",
+        "🌼 每一朵乌云都有银边，我会一直陪着你。",
+        "🍃 慢慢来，你的感受很重要。",
+        "💖 你是值得被温柔对待的，抱抱～",
+        "🌟 今天也辛苦啦，来，深呼吸三次。",
+        "🍀 我听到你啦，一切都会好起来的。",
+        "🎈 送给你一朵小fafa，愿你开心。",
+        "🧸 没关系，你并不孤单，我会在这里。",
+        "☁️ 试着对自己说：我允许自己放松。",
+        "✨ 你正在发光，只是有时候自己没发现。"
+    ];
+    function getRandomComfort() {
+        return comfortMessages[Math.floor(Math.random() * comfortMessages.length)];
+    }
+
+    const messagesDiv = document.getElementById('messagesArea');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function addMessage(text, sender) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        bubble.classList.add(sender === 'user' ? 'user-bubble' : 'ai-bubble');
+        bubble.innerText = text;
+        messagesDiv.appendChild(bubble);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function sendMessage() {
+        let msg = userInput.value.trim();
+        if (!msg) return;
+        addMessage(msg, 'user');
+        userInput.value = '';
+        // 模拟AI回复延迟
+        setTimeout(() => {
+            let reply = getRandomComfort();
+            // 附加小彩蛋：如果用户消息包含“累了”“伤心”等关键词，更定制化
+            if (msg.includes('累') || msg.includes('疲惫')) reply = "🥺 辛苦了，好好抱抱自己，先休息一下叭。";
+            if (msg.includes('哭') || msg.includes('难过')) reply = "😢 我在呢，想哭就哭出来，我递纸巾给你～";
+            addMessage(reply, 'ai');
+        }, 400);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+</script>
+</body>
+</html>

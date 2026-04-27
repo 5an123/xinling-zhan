@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心灵港湾 · 心理测试</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #fff7ef;
+            font-family: 'Segoe UI', 'Comic Neue', cursive;
+            padding: 20px;
+        }
+        .test-wrapper {
+            max-width: 900px;
+            margin: 20px auto;
+            background: #fffdf9;
+            border-radius: 48px;
+            padding: 30px;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.05);
+        }
+        h1 { color: #e7a87a; text-align: center; margin-bottom: 30px; }
+        .question {
+            background: #fffcf3;
+            border-radius: 36px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #ffe3ca;
+        }
+        .q-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #c47a4a;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff2e6;
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        button {
+            background: #ffcf9a;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 20px;
+            width: 200px;
+        }
+        .result-area {
+            background: #fff4e8;
+            border-radius: 32px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+        a {
+            color: #d99b66;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="test-wrapper">
+    <h1>🧘 情绪自测小站</h1>
+    <div id="testForm"></div>
+    <button id="submitTest">🌸 提交测试 查看结果</button>
+    <div id="resultBox" class="result-area"></div>
+    <div class="back-link"><a href="index.html">← 返回首页</a></div>
+</div>
+<script>
+    if (localStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
+
+    // 【此处放豆包文案】10道心理测试题库（每题选项 A B C D 分值0~3分）
+    const questions = [
+        { text: "最近一周，你是否感到情绪低落或沮丧？", options: ["几乎没有", "偶尔", "经常", "总是如此"] },
+        { text: "你是否觉得做事情提不起兴趣？", options: ["完全没有", "有一点", "比较明显", "非常严重"] },
+        { text: "睡眠状况如何？", options: ["很好", "尚可", "入睡困难/易醒", "严重失眠"] },
+        { text: "是否容易紧张或焦虑？", options: ["很放松", "偶尔紧张", "经常焦虑", "极度焦虑"] },
+        { text: "是否觉得自己没有价值？", options: ["从未", "很少", "有时", "经常这样想"] },
+        { text: "食欲变化情况？", options: ["正常", "稍微变化", "明显减少或增加", "完全没食欲/暴食"] },
+        { text: "是否觉得精力不足？", options: ["精力充沛", "稍微疲惫", "容易累", "整天无力"] },
+        { text: "是否对未来的事情感到绝望？", options: ["充满希望", "偶尔迷茫", "比较悲观", "完全绝望"] },
+        { text: "近期是否容易烦躁易怒？", options: ["完全不会", "很少", "时常", "几乎每天"] },
+        { text: "你是否愿意寻求帮助？", options: ["很愿意", "还行", "有些抗拒", "非常拒绝"] }
+    ];
+    // 分值映射 0-3分
+    let testHtml = '';
+    questions.forEach((q, idx) => {
+        testHtml += `<div class="question">
+            <div class="q-title">${idx+1}. ${q.text}</div>
+            <div class="options">`;
+        q.options.forEach((opt, optIdx) => {
+            testHtml += `<label><input type="radio" name="q${idx}" value="${optIdx}"> ${opt}</label>`;
+        });
+        testHtml += `</div></div>`;
+    });
+    document.getElementById('testForm').innerHTML = testHtml;
+
+    document.getElementById('submitTest').addEventListener('click', () => {
+        let totalScore = 0;
+        let allAnswered = true;
+        for (let i = 0; i < questions.length; i++) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if (!selected) {
+                allAnswered = false;
+                alert(`请完成第 ${i+1} 题再提交哟～`);
+                return;
+            }
+            totalScore += parseInt(selected.value);
+        }
+        // 结果解析（0-30分）
+        let resultText = "";
+        if (totalScore <= 8) resultText = "🌟 情绪状态很棒！你内心充满阳光，保持积极节奏，每天给自己一点小奖励吧。";
+        else if (totalScore <= 16) resultText = "🌿 有些小情绪，建议多和信任的人聊聊天，试试呼吸游戏，会慢慢缓解。";
+        else if (totalScore <= 24) resultText = "🍂 压力比较明显，给自己放个假，做点喜欢的事，如果需要专业帮助也很勇敢。";
+        else resultText = "💧 情绪负荷较重，你辛苦了，请一定优先照顾自己，试试对话页倾诉或寻求支持。";
+        const advice = `✨ 暖心建议：每天5分钟冥想，记录三件开心小事，你是值得被爱的。`;
+        const resultDiv = document.getElementById('resultBox');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `<h3>📋 你的总分: ${totalScore} / 30</h3><p>${resultText}</p><p>${advice}</p>`;
+        // 滚动到结果
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
